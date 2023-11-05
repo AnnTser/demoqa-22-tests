@@ -1,6 +1,8 @@
 package tests;
 
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.Selenide;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +20,6 @@ public class RegistrationTests {
         Configuration.baseUrl = "https://demoqa.com";
         Configuration.browserSize = "1920x1080";
         Configuration.pageLoadStrategy = "eager";
-        Configuration.holdBrowserOpen = true;
     }
 
     @Test
@@ -29,7 +30,7 @@ public class RegistrationTests {
         executeJavaScript("$('#fixedban').remove()");
         executeJavaScript("$('footer').remove()");
 
-        $("#firstName").setValue("userName");
+        $("#firstName").setValue(userName);
         $("#lastName").setValue("Tser");
         $("#userEmail").setValue("ann@tser.com");
         $("#genterWrapper").$(byText("Other")).click();
@@ -50,8 +51,7 @@ public class RegistrationTests {
 
         $(".modal-dialog").should(appear);
         $("#example-modal-sizes-title-lg").shouldHave(text("Thanks for submitting the form"));
-        $(".table-responsive").shouldHave(text(userName));
-        $(".table-responsive").shouldHave(text("Tser"));
+        $(".table-responsive").$(byText("Student Name")).parent().shouldHave(text(userName + " Tser"));
         $(".table-responsive").shouldHave(text("ann@tser.com"));
         $(".table-responsive").shouldHave(text("0123456789"));
         $(".table-responsive").shouldHave(text("Other"));
@@ -61,5 +61,9 @@ public class RegistrationTests {
         $(".table-responsive").shouldHave(text("1.png"));
         $(".table-responsive").shouldHave(text("Moscow BC 11"));
         $(".table-responsive").shouldHave(text("NCR Noida"));
+    }
+    @AfterEach
+    void afterEach() {
+        Selenide.closeWebDriver();
     }
 }
